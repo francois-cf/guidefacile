@@ -25,5 +25,5 @@ Nous respectons votre vie privée. Cette page explique quelles données nous col
 - Certains liens sont affiliés : nous pouvons percevoir une commission si vous achetez, sans coût supplémentaire.
 
 ## Vos droits
-- Accès, rectification, suppression : contactez-nous à **YOUR_CONTACT_EMAIL**.
+- Accès, rectification, suppression : contactez-nous à guidefacile.contact@gmail.com .
 
