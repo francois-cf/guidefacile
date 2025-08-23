@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://example.github.io/repo/</loc></url>
+  <url><loc>https://example.github.io/repo/oreiller-voyage/</loc></url>
+  <url><loc>https://example.github.io/repo/kit-toilette-voyage/</loc></url>
+  <url><loc>https://example.github.io/repo/gourde-filtrante/</loc></url>
   <url><loc>https://example.github.io/repo/best-toothbrush-travel/</loc></url>
 </urlset>
