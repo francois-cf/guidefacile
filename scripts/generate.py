@@ -61,23 +61,39 @@ def build_index_cards(pages):
     grid_path.write_text(new_html, encoding="utf-8")
 
 def build_sitemap(pages, site_root=None):
-    site_root = site_root or os.environ.get("SITE_ROOT","https://example.github.io/repo")
-    lines = ["<?xml version=\"1.0\" encoding=\"UTF-8\"?>","<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">"]
-    # add homepage
+    site_root = site_root or os.environ.get("SITE_ROOT", "https://example.github.io/repo")
+
+    # ---- SITEMAP.XML ----
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+    ]
+    # homepage
     lines.append(f"  <url><loc>{site_root}/</loc></url>")
-    for slug, _ in pages:
+    for slug, _title in pages:
         lines.append(f"  <url><loc>{site_root}/{slug}/</loc></url>")
     lines.append("</urlset>")
     (DOCS / "sitemap.xml").write_text("\n".join(lines), encoding="utf-8")
-    # simple RSS for Buffer/Pinterest
-    rss = [\"\"\"<?xml version="1.0" encoding="UTF-8" ?>\"\"\" ,
-           \"\"\"<rss version="2.0\"><channel>\"\"\",
-           f\"<title>ComparoLoop</title>\", f\"<link>{site_root}/</link>\", f\"<description>Guides d'achat utiles</description>\"]
-    today = datetime.date.today().strftime("%a, %d %b %Y 00:00:00 +0000")
+
+    # ---- RSS.XML ----
+    rss = [
+        '<?xml version="1.0" encoding="UTF-8" ?>',
+        '<rss version="2.0"><channel>',
+        '<title>GuideFacile</title>',
+        f'<link>{site_root}/</link>',
+        "<description>Guides d'achat utiles</description>"
+    ]
+    # date RFC 822
+    now_rfc822 = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S +0000")
     for slug, title in pages[:50]:
-        rss.append(f\"<item><title>{html.escape(title)}</title><link>{site_root}/{slug}/</link><pubDate>{today}</pubDate></item>\")
-    rss.append(\"</channel></rss>\")
+        rss.append(
+            f"<item><title>{html.escape(title)}</title>"
+            f"<link>{site_root}/{slug}/</link>"
+            f"<pubDate>{now_rfc822}</pubDate></item>"
+        )
+    rss.append("</channel></rss>")
     (DOCS / "rss.xml").write_text("\n".join(rss), encoding="utf-8")
+
 
 def main():
     pages = []
