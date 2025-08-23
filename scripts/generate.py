@@ -48,7 +48,7 @@ def build_index_cards(pages):
     grid_path = DOCS / "index.html"
     html_text = grid_path.read_text(encoding="utf-8")
 
-    # Construire les cartes (une seule fois par slug)
+    # Construire la liste de cartes (une seule par slug)
     seen = set()
     cards = []
     for slug, title in pages:
@@ -57,9 +57,9 @@ def build_index_cards(pages):
         seen.add(slug)
         cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a></div>")
 
-    new_block = "<!-- LATEST-START -->\n      " + "\n      ".join(cards) + "\n      <!-- LATEST-END -->"
+    new_block = "<!-- LATEST-START -->\n    " + "\n    ".join(cards) + "\n    <!-- LATEST-END -->"
 
-    # Remplacer précisément entre les repères
+    # Remplace tout ce qu'il y a entre les deux balises repères
     new_html = re.sub(
         r"<!-- LATEST-START -->.*?<!-- LATEST-END -->",
         new_block,
@@ -68,6 +68,7 @@ def build_index_cards(pages):
     )
 
     grid_path.write_text(new_html, encoding="utf-8")
+
 
 
     cards = []
