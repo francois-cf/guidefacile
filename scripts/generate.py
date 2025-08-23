@@ -47,11 +47,28 @@ def render_article(row):
 def build_index_cards(pages):
     grid_path = DOCS / "index.html"
     html_text = grid_path.read_text(encoding="utf-8")
-    # naive injection: replace the demo card with generated cards list
-    marker = "<div class=\"grid\" id=\"latest-grid\">"
-    before, after = html_text.split(marker, 1)
-    end_marker = "</div>"
-    inner, rest = after.split(end_marker, 1)
+
+    # Construire les cartes (une seule fois par slug)
+    seen = set()
+    cards = []
+    for slug, title in pages:
+        if slug in seen:
+            continue
+        seen.add(slug)
+        cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a></div>")
+
+    new_block = "<!-- LATEST-START -->\n      " + "\n      ".join(cards) + "\n      <!-- LATEST-END -->"
+
+    # Remplacer précisément entre les repères
+    new_html = re.sub(
+        r"<!-- LATEST-START -->.*?<!-- LATEST-END -->",
+        new_block,
+        html_text,
+        flags=re.DOTALL
+    )
+
+    grid_path.write_text(new_html, encoding="utf-8")
+
 
     cards = []
     for slug, title in pages[:24]:
