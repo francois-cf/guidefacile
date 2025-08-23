@@ -81,15 +81,29 @@ def build_sitemap(pages, site_root=None):
 
 def main():
     pages = []
-    if DATA.exists():
-        with open(DATA, newline='', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                pages.append(render_article(row))
-    # newest first
+
+    # Vérifie que le CSV existe
+    if not DATA.exists():
+        raise SystemExit("CSV introuvable: " + str(DATA))
+
+    # Lit le CSV et génère les pages
+    with open(DATA, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            pages.append(render_article(row))
+
+    # Plus récent en premier (tri par slug ici, OK pour commencer)
     pages.sort(key=lambda x: x[0], reverse=True)
+
+    # Debug : combien d'articles lus ?
+    print("DEBUG: articles lus =", len(pages))
+
+    # Met à jour l'index et le sitemap
     build_index_cards(pages)
     build_sitemap(pages)
 
+
 if __name__ == "__main__":
+    # Debug : lancement du script
+    print("DEBUG: lancement de generate.py…")
     main()
