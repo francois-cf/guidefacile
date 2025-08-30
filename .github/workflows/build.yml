@@ -17,44 +17,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
-
-      - name: Show repo tree BEFORE
-        run: |
-          echo "== TREE BEFORE =="
-          ls -la
-          echo "== /docs =="
-          ls -la docs || true
-          echo "== /data =="
-          ls -la data || true
-          echo "== /scripts =="
-          ls -la scripts || true
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Generate pages
+      - name: Generate static pages
         run: |
-          set -e
           python -m pip install --upgrade pip
           python scripts/generate.py
           echo "Generation finished."
 
-      - name: Show repo tree AFTER
-        run: |
-          echo "== TREE AFTER =="
-          ls -la
-          echo "== /docs AFTER =="
-          ls -la docs || true
-
       - name: Commit generated pages
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "build: update pages"
+          commit_message: "build: update pages (SITE_ROOT)"
