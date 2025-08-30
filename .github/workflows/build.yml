@@ -22,7 +22,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      # Toujours se resynchroniser avec la branche distante avant de générer
+      # On repart exactement de l'état distant
       - name: Sync with remote main
         run: |
           git fetch origin main
@@ -40,10 +40,29 @@ jobs:
           python scripts/generate.py
           echo "Generation finished."
 
-      - name: Commit & Push generated pages
+      # Commit + boucle de push robuste contre les "non-fast-forward"
+      - name: Commit & Push generated pages (robust)
         run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # On met en scène les changements
           git add -A
           git commit -m "build: update pages (SITE_ROOT)" || echo "No changes"
-          git push origin HEAD:main
+
+          # Boucle de tentative: si le push est rejeté, on rebase et on retente
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Push ok on try $i"
+              break
+            else
+              echo "Push rejected, rebasing (try $i)…"
+              git fetch origin main
+              git pull --rebase origin main || true
+              # Re-stager au cas où le rebase ait modifié l'index
+              git add -A
+              # Pas de nouveau commit si rien à ajouter
+              git commit -m "build: update pages (SITE_ROOT)" || true
+            fi
+          done
