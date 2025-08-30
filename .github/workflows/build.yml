@@ -12,6 +12,11 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SITE_ROOT: "https://guide-facile.fr"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
     steps:
       - name: Checkout
         uses: actions/checkout@v4
