@@ -166,11 +166,14 @@ def main():
 
     # Met à jour l'accueil + sitemap/rss
     build_index_cards(pages)
-    # SITE_ROOT pour ton site GitHub Pages
-    user = os.environ.get("GITHUB_REPOSITORY", "user/repo").split("/")[0]
-    repo = os.environ.get("GITHUB_REPOSITORY", "user/repo").split("/")[1]
+  # Utilise d'abord la variable d'env SITE_ROOT (build.yml), sinon fallback github.io
+site_root = os.environ.get("SITE_ROOT")
+if not site_root:
+    user, repo = os.environ.get("GITHUB_REPOSITORY", "user/repo").split("/")
     site_root = f"https://{user}.github.io/{repo}"
-    build_sitemap_and_rss(pages, site_root=site_root)
+
+print("DEBUG: SITE_ROOT utilisé =", site_root)
+build_sitemap_and_rss(pages, site_root=site_root)
 
 if __name__ == "__main__":
     main()
