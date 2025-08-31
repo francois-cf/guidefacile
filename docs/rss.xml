@@ -1,10 +1,25 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel>
 <title>GuideFacile</title>
-<link>https://francois-cf.github.io/guidefacile/</link>
-<description>Guides d'achat utiles</description>
-<item><title>Brosse à dents de voyage : le guide rapide</title><link>https://francois-cf.github.io/guidefacile/best-toothbrush-travel/</link><pubDate>Sun, 31 Aug 2025 03:46:11 +0000</pubDate></item>
-<item><title>Oreiller de voyage confortable : le guide</title><link>https://francois-cf.github.io/guidefacile/oreiller-voyage/</link><pubDate>Sun, 31 Aug 2025 03:46:11 +0000</pubDate></item>
-<item><title>Kit de toilette avion / voyage</title><link>https://francois-cf.github.io/guidefacile/kit-toilette-voyage/</link><pubDate>Sun, 31 Aug 2025 03:46:11 +0000</pubDate></item>
-<item><title>Gourde filtrante pour voyager partout</title><link>https://francois-cf.github.io/guidefacile/gourde-filtrante/</link><pubDate>Sun, 31 Aug 2025 03:46:11 +0000</pubDate></item>
+<link>https://guide-facile.fr/</link>
+<item>
+<title>Brosse à dents de voyage : le guide rapide</title>
+<link>https://guide-facile.fr/best-toothbrush-travel/</link>
+<description>Si vous voulez le plus simple : une brosse pliable avec capuchon ventilé. Budget 5–12€. Pour un kit premium, ajoutez un étui UV et un mini-dentifrice solide.</description>
+</item>
+<item>
+<title>Oreiller de voyage confortable : le guide</title>
+<link>https://guide-facile.fr/oreiller-voyage/</link>
+<description>Le plus polyvalent : un oreiller en mousse à mémoire avec housse lavable. Budget 15–30 €.</description>
+</item>
+<item>
+<title>Kit de toilette avion / voyage</title>
+<link>https://guide-facile.fr/kit-toilette-voyage/</link>
+<description>Le plus simple : une trousse souple + flacons avion réutilisables. Budget 12–25 €.</description>
+</item>
+<item>
+<title>Gourde filtrante pour voyager partout</title>
+<link>https://guide-facile.fr/gourde-filtrante/</link>
+<description>La meilleure option : gourde filtrante avec filtre à charbon ou membrane, réutilisable. Budget 25–60 €.</description>
+</item>
 </channel></rss>
