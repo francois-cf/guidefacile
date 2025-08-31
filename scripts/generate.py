@@ -1,127 +1,185 @@
-import csv, os, pathlib, datetime, html
+import csv, os, pathlib, datetime, html, re
 
 BASE = pathlib.Path(__file__).resolve().parents[1]
 DOCS = BASE / "docs"
 DATA = BASE / "data" / "articles.csv"
 
-def safe_slug(slug):
-    return slug.strip().replace(" ", "-").lower()
+def _normalize_row(row: dict) -> dict:
+    # normalise les clés (minuscules) et gère les champs manquants
+    lower = { (k or "").strip().lower(): (v or "").strip() for k, v in row.items() }
+    slug = (lower.get("slug", "") or "").replace(" ", "-").lower()
+    title = lower.get("title", "")
+    meta_desc = lower.get("meta_desc", "") or lower.get("meta desc", "") or lower.get("metadesc", "")
+    summary = lower.get("summary", "")
+    affiliate_links = lower.get("affiliate_links", "") or lower.get("affiliate links", "")
+    html_content = lower.get("html_content", "") or lower.get("html content", "") or lower.get("content", "")
+    last_updated = lower.get("last_updated", "") or datetime.date.today().isoformat()
 
-def render_article(row):
-    slug = safe_slug(row["slug"])
-    title = row["title"]
-    meta_desc = row["meta_desc"]
-    summary = row["summary"]
-    affiliate_links = row["affiliate_links"].split(";") if row["affiliate_links"] else []
-    html_content = row["html_content"]
+    return {
+        "slug": slug,
+        "title": title,
+        "meta_desc": meta_desc,
+        "summary": summary,
+        "affiliate_links": affiliate_links,
+        "html_content": html_content,
+        "last_updated": last_updated,
+    }
+
+def _read_csv() -> list:
+    if not DATA.exists():
+        raise SystemExit("CSV introuvable: " + str(DATA))
+    pages = []
+    with open(DATA, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            p = _normalize_row(row)
+            # on garde uniquement les lignes valides
+            if p["slug"] and p["title"]:
+                pages.append(p)
+    return pages
+
+def _affiliate_buttons(links_str: str) -> str:
+    if not links_str:
+        return ""
+    buttons = []
+    for part in links_str.split(";"):
+        part = part.strip()
+        if not part:
+            continue
+        if ":" in part:
+            label, url = part.split(":", 1)
+        else:
+            label, url = "Acheter", part
+        buttons.append(
+            f"<a class='btn' href='{html.escape(url.strip())}' target='_blank' rel='nofollow sponsored noopener'>{html.escape(label.strip())}</a>"
+        )
+    return "<div class='buy-block' style='margin:1rem 0;display:flex;gap:.5rem;flex-wrap:wrap'>" + " ".join(buttons) + "</div>" if buttons else ""
+
+def build_page(p: dict) -> None:
+    slug = p["slug"]
+    title = p["title"]
+    meta_desc = p["meta_desc"]
+    summary = p["summary"]
+    html_content = p["html_content"]
+    buy = _affiliate_buttons(p["affiliate_links"])
 
     outdir = DOCS / slug
     outdir.mkdir(parents=True, exist_ok=True)
     outf = outdir / "index.html"
 
-    links_html = ""
-    for link in affiliate_links:
-        if ":" in link:
-            label, url = link.split(":", 1)
-            links_html += f'<a class="btn" href="{html.escape(url.strip())}" target="_blank" rel="nofollow noopener">{html.escape(label.strip())}</a> '
-
-    with open(outf, "w", encoding="utf-8") as f:
-        f.write(f"""<!DOCTYPE html>
+    page_html = f"""<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>{html.escape(title)}</title>
+  <meta charset="utf-8">
+  <title>{html.escape(title)} — GuideFacile</title>
   <meta name="description" content="{html.escape(meta_desc)}">
-  <link rel="stylesheet" href="../assets/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:860px;margin:0 auto;padding:16px}}
+    h1{{margin-top:0}}
+    .muted{{color:#666}}
+    .btn{{display:inline-block;padding:.6rem .9rem;border-radius:.6rem;border:1px solid #ddd;text-decoration:none}}
+    table{{border-collapse:collapse;width:100%}} th,td{{border:1px solid #eee;padding:.5rem;text-align:left}}
+  </style>
 </head>
 <body>
+  <a href="../" style="display:inline-block;margin:.5rem 0">← Retour</a>
   <h1>{html.escape(title)}</h1>
-  <p>{summary}</p>
-  <div>{links_html}</div>
+  <p class="muted">{html.escape(summary)}</p>
+  {buy}
   <article>{html_content}</article>
-  <p><a href="../index.html">⬅ Retour à l'accueil</a></p>
+  {buy}
+  <p class="muted">Dernière mise à jour : {html.escape(p["last_updated"])}</p>
 </body>
-</html>""")
+</html>"""
+    outf.write_text(page_html, encoding="utf-8")
 
-    return (row["last_updated"], slug, title, summary)
-
-def build_index_cards(pages):
+def build_index_cards(pages: list) -> None:
     indexf = DOCS / "index.html"
-    with open(indexf, encoding="utf-8") as f:
-        index_html = f.read()
-
-    start = index_html.find("<!-- LATEST-START -->")
-    end = index_html.find("<!-- LATEST-END -->")
-
-    if start == -1 or end == -1:
-        print("⚠️ Impossible de trouver les marqueurs dans index.html")
+    if not indexf.exists():
+        print("⚠️ docs/index.html introuvable, saut de la mise à jour de l'accueil.")
         return
+    html_text = indexf.read_text(encoding="utf-8")
 
-    marker = "<!-- LATEST-START -->"
-    end_marker = "<!-- LATEST-END -->"
+    # construit les cartes (1 par slug)
+    seen = set()
+    cards = []
+    for p in pages:
+        slug, title, summary = p["slug"], p["title"], p["summary"]
+        if slug in seen:
+            continue
+        seen.add(slug)
+        cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a></div>")
 
-    before = index_html[: start + len(marker)]
-    rest = index_html[end:]
-    new_inner = "\n" + "\n".join(
-        f'<div class="card"><a href="./{slug}/index.html">{title}</a><p>{summary}</p></div>'
-        for (_, slug, title, summary) in pages
-    ) + "\n"
+    block = "<!-- LATEST-START -->\n  " + "\n  ".join(cards) + "\n  <!-- LATEST-END -->"
 
-    new_html = before + new_inner + end_marker + rest
+    new_html = re.sub(
+        r"<!-- LATEST-START -->.*?<!-- LATEST-END -->",
+        block,
+        html_text,
+        flags=re.DOTALL
+    )
+    indexf.write_text(new_html, encoding="utf-8")
 
-    with open(indexf, "w", encoding="utf-8") as f:
-        f.write(new_html)
+def build_sitemap_and_rss(pages: list, site_root: str) -> None:
+    # SITEMAP
+    sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    sm.append(f"<url><loc>{site_root}/</loc></url>")
+    for p in pages:
+        sm.append(f"<url><loc>{site_root}/{p['slug']}/</loc></url>")
+    sm.append("</urlset>")
+    (DOCS / "sitemap.xml").write_text("\n".join(sm), encoding="utf-8")
 
-def build_sitemap_and_rss(pages, site_root):
-    # Générer sitemap.xml
-    sitemapf = DOCS / "sitemap.xml"
-    with open(sitemapf, "w", encoding="utf-8") as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n')
-        f.write(f"<url><loc>{site_root}/</loc></url>\n")
-        for (_, slug, _, _) in pages:
-            f.write(f"<url><loc>{site_root}/{slug}/</loc></url>\n")
-        f.write("</urlset>")
+    # RSS (simple)
+    rss = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0"><channel>']
+    rss.append(f"<title>GuideFacile</title>")
+    rss.append(f"<link>{site_root}/</link>")
+    for p in pages:
+        rss.append("<item>")
+        rss.append(f"<title>{html.escape(p['title'])}</title>")
+        rss.append(f"<link>{site_root}/{p['slug']}/</link>")
+        rss.append(f"<description>{html.escape(p['summary'])}</description>")
+        rss.append("</item>")
+    rss.append("</channel></rss>")
+    (DOCS / "rss.xml").write_text("\n".join(rss), encoding="utf-8")
 
-    # Générer rss.xml
-    rssf = DOCS / "rss.xml"
-    with open(rssf, "w", encoding="utf-8") as f:
-        f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-        f.write('<rss version="2.0"><channel>\n')
-        f.write(f"<title>Guides - {site_root}</title>\n")
-        f.write(f"<link>{site_root}/</link>\n")
-        for (_, slug, title, summary) in pages:
-            f.write("<item>\n")
-            f.write(f"<title>{html.escape(title)}</title>\n")
-            f.write(f"<link>{site_root}/{slug}/</link>\n")
-            f.write(f"<description>{html.escape(summary)}</description>\n")
-            f.write("</item>\n")
-        f.write("</channel></rss>")
+def _sort_key(p: dict):
+    # trie du plus récent au plus ancien (tolérant aux formats)
+    try:
+        return datetime.date.fromisoformat(p["last_updated"])
+    except Exception:
+        return datetime.date.today()
 
 def main():
-    pages = []
-    if DATA.exists():
-        with open(DATA, newline='', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                pages.append(render_article(row))
+    print("DEBUG: lancement de generate.py…")
 
-    # newest first
-    pages.sort(key=lambda x: x[0], reverse=True)
+    pages = _read_csv()
+    print("DEBUG: articles lus =", len(pages))
+    print("DEBUG: slugs =", ", ".join([p["slug"] for p in pages]))
+
+    # Générer chaque page
+    for p in pages:
+        build_page(p)
+
+    # Accueil
+    pages.sort(key=_sort_key, reverse=True)
     build_index_cards(pages)
 
-    # Choisir le site_root : variable d'env (SITE_ROOT) ou fallback github.io
+    # SITE_ROOT depuis le workflow, sinon fallback github.io
     site_root = os.environ.get("SITE_ROOT")
     if not site_root:
-        user, repo = os.environ.get("GITHUB_REPOSITORY", "user/repo").split("/")
-        site_root = f"https://{user}.github.io/{repo}"
-
+        user_repo = os.environ.get("GITHUB_REPOSITORY", "")
+        if "/" in user_repo:
+            user, repo = user_repo.split("/", 1)
+            site_root = f"https://{user}.github.io/{repo}"
+        else:
+            site_root = "https://example.github.io/repo"
     print("DEBUG: SITE_ROOT utilisé =", site_root)
+
+    # Sitemaps + RSS
     build_sitemap_and_rss(pages, site_root=site_root)
 
-if not DATA.exists():
-    raise SystemExit("CSV introuvable: " + str(DATA))
-
 if __name__ == "__main__":
-    print("DEBUG: lancement de generate.py…")
+    if not DATA.exists():
+        raise SystemExit("CSV introuvable: " + str(DATA))
     main()
