@@ -39,7 +39,7 @@ body{
 }
 .hero{
   margin:12px 0 28px;
-  background:linear-gradient(180deg, #0d1221 0%, #0a0f1c 100%);
+  background:linear-gradient(180deg, #A4193D 0%, #7d102e 100%);
   border:1px solid rgba(255,255,255,.06);
   border-radius:calc(var(--radius) + 8px);
   box-shadow:var(--shadow);
