@@ -130,7 +130,7 @@ def build_index_cards(pages: list) -> None:
         if slug in seen:
             continue
         seen.add(slug)
-        cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a><p>{html.escape(summary)}</p></div>")
+        cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a></div>")
 
     block = "<!-- LATEST-START -->\n  " + "\n  ".join(cards) + "\n  <!-- LATEST-END -->"
 
