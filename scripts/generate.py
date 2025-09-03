@@ -1,11 +1,12 @@
 import csv, os, pathlib, datetime, html, re
 
+# Chemins de base
 BASE = pathlib.Path(__file__).resolve().parents[1]
 DOCS = BASE / "docs"
 DATA = BASE / "data" / "articles.csv"
 
 def _normalize_row(row: dict) -> dict:
-    # normalise les clés (minuscules) et gère les champs manquants
+    """Normalise les clés et sécurise les champs manquants."""
     lower = { (k or "").strip().lower(): (v or "").strip() for k, v in row.items() }
     slug = (lower.get("slug", "") or "").replace(" ", "-").lower()
     title = lower.get("title", "")
@@ -26,6 +27,7 @@ def _normalize_row(row: dict) -> dict:
     }
 
 def _read_csv() -> list:
+    """Lit le CSV et retourne une liste de pages prêtes à générer."""
     if not DATA.exists():
         raise SystemExit("CSV introuvable: " + str(DATA))
     pages = []
@@ -33,12 +35,12 @@ def _read_csv() -> list:
         reader = csv.DictReader(f)
         for row in reader:
             p = _normalize_row(row)
-            # on garde uniquement les lignes valides
             if p["slug"] and p["title"]:
                 pages.append(p)
     return pages
 
 def _affiliate_buttons(links_str: str) -> str:
+    """Transforme 'Label:url;Label2:url2' en boutons HTML .btn dans un .buy-block."""
     if not links_str:
         return ""
     buttons = []
@@ -49,17 +51,20 @@ def _affiliate_buttons(links_str: str) -> str:
         if ":" in part:
             label, url = part.split(":", 1)
         else:
-            label, url = "Acheter", part
+            label, url = "Voir le produit", part
         buttons.append(
             f"<a class='btn' href='{html.escape(url.strip())}' target='_blank' rel='nofollow sponsored noopener'>{html.escape(label.strip())}</a>"
         )
-    return "<div class='buy-block' style='margin:1rem 0;display:flex;gap:.5rem;flex-wrap:wrap'>" + " ".join(buttons) + "</div>" if buttons else ""
+    if not buttons:
+        return ""
+    return "<div class='buy-block' style='margin:16px 0;display:flex;gap:10px;flex-wrap:wrap;justify-content:center'>" + " ".join(buttons) + "</div>"
 
 def build_page(p: dict) -> None:
+    """Génère la page HTML d’un article avec le même design que l’accueil."""
     slug = p["slug"]
     title = p["title"]
-    meta_desc = p["meta_desc"]
     summary = p["summary"]
+    meta_desc = p["meta_desc"]
     html_content = p["html_content"]
     buy = _affiliate_buttons(p["affiliate_links"])
 
@@ -67,13 +72,13 @@ def build_page(p: dict) -> None:
     outdir.mkdir(parents=True, exist_ok=True)
     outf = outdir / "index.html"
 
-  page_html = f"""<!DOCTYPE html>
+    page_html = f"""<!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>{title} • GuideFacile</title>
+  <title>{html.escape(title)} • GuideFacile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{meta_desc}">
+  <meta name="description" content="{html.escape(meta_desc)}">
   <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
@@ -81,18 +86,19 @@ def build_page(p: dict) -> None:
   <!-- Hero Crimson -->
   <div class="container">
     <div class="hero">
-      <h1>{title}</h1>
-      <p>{summary}</p>
+      <h1>{html.escape(title)}</h1>
+      <p>{html.escape(summary)}</p>
+      <div class="cta">
+        <a class="btn" href="../index.html#guides">Voir les derniers guides</a>
+      </div>
     </div>
   </div>
 
   <!-- Contenu de l’article -->
   <div class="container">
-    {html_content}
-    <div class="buy-block">
-      {links}
-    </div>
-    <p class="muted">Dernière mise à jour : {p["last_updated"]}</p>
+    <article>{html_content}</article>
+    {buy}
+    <p class="muted">Dernière mise à jour : {html.escape(p["last_updated"])}</p>
   </div>
 
   <!-- Footer -->
@@ -106,26 +112,17 @@ def build_page(p: dict) -> None:
 
 </body>
 </html>"""
- 
-  <a href="../" style="display:inline-block;margin:.5rem 0">← Retour</a>
-  <h1>{html.escape(title)}</h1>
-  <p class="muted">{html.escape(summary)}</p>
-  {buy}
-  <article>{html_content}</article>
-  {buy}
-  <p class="muted">Dernière mise à jour : {html.escape(p["last_updated"])}</p>
-</body>
-</html>"""
+
     outf.write_text(page_html, encoding="utf-8")
 
 def build_index_cards(pages: list) -> None:
+    """Injecte les cartes d’articles entre <!-- LATEST-START --> et <!-- LATEST-END --> dans docs/index.html."""
     indexf = DOCS / "index.html"
     if not indexf.exists():
         print("⚠️ docs/index.html introuvable, saut de la mise à jour de l'accueil.")
         return
     html_text = indexf.read_text(encoding="utf-8")
 
-    # construit les cartes (1 par slug)
     seen = set()
     cards = []
     for p in pages:
@@ -133,7 +130,7 @@ def build_index_cards(pages: list) -> None:
         if slug in seen:
             continue
         seen.add(slug)
-        cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a></div>")
+        cards.append(f"<div class='card'><a href='./{slug}/index.html'>{html.escape(title)}</a><p>{html.escape(summary)}</p></div>")
 
     block = "<!-- LATEST-START -->\n  " + "\n  ".join(cards) + "\n  <!-- LATEST-END -->"
 
@@ -146,6 +143,7 @@ def build_index_cards(pages: list) -> None:
     indexf.write_text(new_html, encoding="utf-8")
 
 def build_sitemap_and_rss(pages: list, site_root: str) -> None:
+    """Génère sitemap.xml et rss.xml dans docs/ avec la bonne racine d’URL."""
     # SITEMAP
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     sm.append(f"<url><loc>{site_root}/</loc></url>")
@@ -154,7 +152,7 @@ def build_sitemap_and_rss(pages: list, site_root: str) -> None:
     sm.append("</urlset>")
     (DOCS / "sitemap.xml").write_text("\n".join(sm), encoding="utf-8")
 
-    # RSS (simple)
+    # RSS simple
     rss = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0"><channel>']
     rss.append(f"<title>GuideFacile</title>")
     rss.append(f"<link>{site_root}/</link>")
@@ -168,7 +166,7 @@ def build_sitemap_and_rss(pages: list, site_root: str) -> None:
     (DOCS / "rss.xml").write_text("\n".join(rss), encoding="utf-8")
 
 def _sort_key(p: dict):
-    # trie du plus récent au plus ancien (tolérant aux formats)
+    """Tri par date (du plus récent au plus ancien), tolérant aux formats."""
     try:
         return datetime.date.fromisoformat(p["last_updated"])
     except Exception:
@@ -181,15 +179,15 @@ def main():
     print("DEBUG: articles lus =", len(pages))
     print("DEBUG: slugs =", ", ".join([p["slug"] for p in pages]))
 
-    # Générer chaque page
+    # Génère chaque page produit
     for p in pages:
         build_page(p)
 
-    # Accueil
+    # Accueil : cartes automatiques
     pages.sort(key=_sort_key, reverse=True)
     build_index_cards(pages)
 
-    # SITE_ROOT depuis le workflow, sinon fallback github.io
+    # Détermine la racine de site
     site_root = os.environ.get("SITE_ROOT")
     if not site_root:
         user_repo = os.environ.get("GITHUB_REPOSITORY", "")
@@ -200,7 +198,7 @@ def main():
             site_root = "https://example.github.io/repo"
     print("DEBUG: SITE_ROOT utilisé =", site_root)
 
-    # Sitemaps + RSS
+    # Sitemap + RSS
     build_sitemap_and_rss(pages, site_root=site_root)
 
 if __name__ == "__main__":
