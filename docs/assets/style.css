@@ -39,14 +39,15 @@ body{
 }
 .hero{
   margin:12px 0 28px;
-  background:linear-gradient(180deg, #A4193D 0%, #7d102e 100%);
-  border:1px solid rgba(255,255,255,.06);
+  background:linear-gradient(180deg, #FFDFB9 0%, #FFCDA0 100%);
+  border:1px solid rgba(0,0,0,.06);
   border-radius:calc(var(--radius) + 8px);
   box-shadow:var(--shadow);
   padding:28px;
+  color:#2b2b2b;       /* texte sombre pour bonne lisibilité sur fond clair */
 }
-.hero h1{margin:0 0 .4rem;font-size:clamp(26px,3.4vw,36px);line-height:1.2}
-.hero p{margin:0;color:var(--muted)}
+.hero h1{ color:#1b1b1b; }
+.hero p{ margin:0; color:#2b2b2b; opacity:.9; }
 
 /* ===== Grille de cartes ===== */
 .section h2{margin:8px 0 16px;font-size:clamp(20px,2.6vw,26px)}
