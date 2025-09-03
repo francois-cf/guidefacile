@@ -1,92 +1,45 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <title>GuideFacile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GuideFacile — Guides & Outils</title>
-  <meta name="description" content="Guides d'achat et outils gratuits pour choisir le bon produit selon votre usage et budget.">
-  <link rel="canonical" href="./">
-  <!-- ANALYTICS -->
-  <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin:0; line-height:1.5;}
-    header { padding: 48px 20px; background: #0b0f19; color: #fff; }
-    .container { max-width: 980px; margin: 0 auto; }
-    .hero h1 { font-size: 40px; margin: 0 0 8px; }
-    .hero p { max-width: 720px; opacity: 0.9; }
-    .cta { margin-top: 24px; display:flex; gap:12px; flex-wrap:wrap; }
-    .btn { padding: 12px 18px; border-radius: 8px; border:1px solid #fff; background:#fff; color:#0b0f19; text-decoration:none; font-weight:600; }
-    .section { padding: 32px 20px; }
-    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:16px; }
-    .card { border:1px solid #eee; border-radius:12px; padding:16px; }
-    footer { padding: 24px 20px; font-size:14px; color:#555; }
-    code { background:#f5f5f5; padding:2px 6px; border-radius:6px; }
-  </style>
+  <meta name="description" content="Guides d’achat voyage clairs et utiles : comparatifs simples, conseils pratiques et liens fiables.">
   <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
+
+  <!-- Hero principal -->
   <div class="container">
-  <div class="hero">
-    <h1>Guides d’achat voyage clairs et utiles</h1>
-    <p>Trouve l’accessoire parfait en 2 minutes : comparatifs simples, conseils, liens fiables.</p>
-  </div>
-</div>
-<header>
-  <div class="container hero">
-    <h1>GuideFacile</h1>
-    <p>Des recommandations claires et personnalisées, basées sur vos usages. Guides d'achat, checklists et outils gratuits, sans blabla.</p>
-    <div class="cta">
-      <a class="btn" href="#guides">Voir les derniers guides</a>
-      <a class="btn" href="#newsletter">Recevoir 1 guide utile / semaine</a>
+    <div class="hero">
+      <h1>Guides d’achat voyage clairs et utiles</h1>
+      <p>Trouve l’accessoire parfait en 2 minutes : comparatifs simples, conseils, liens fiables.</p>
+      <div class="cta">
+        <a class="btn" href="#guides">Voir les derniers guides</a>
+        <a class="btn" href="#newsletter">Recevoir 1 guide utile / semaine</a>
+      </div>
     </div>
   </div>
-</header>
 
-<main class="container">
-  <section class="section" id="newsletter">
-    <h2>Recevoir les bons plans</h2>
-    <p>Inscrivez-vous pour recevoir 1 email par semaine avec des recommandations à forte valeur (et 0 spam). Désinscription en 1 clic.</p>
-    <!-- Paste Brevo/Substack form embed below -->
-    <div id="form-embed"><em>Collez ici le code d'intégration de votre formulaire.</em></div>
-  </section>
-
-  <section class="section" id="quiz">
-    <h2>Trouvez le bon produit en 60s</h2>
-    <p>Répondez à quelques questions et obtenez une recommandation personnalisée avec les points forts / limites et où l'acheter.</p>
-    <p><a class="btn" href="https://tally.so/" target="_blank" rel="noopener">Lancer le quiz</a></p>
-  </section>
-
-  <section class="section" id="guides">
-  <h2>Derniers guides</h2>
-  <div class="grid" id="latest-grid">
-    <!-- LATEST-START -->
-  <div class='card'><a href='./pese-bagage-electronique/index.html'>Pèse Bagage Valise Électronique Balance Portable 50Kg</a></div>
-  <div class='card'><a href='./bouchons-oreilles-voyage/index.html'>Bouchons d’Oreilles FlyFit : régulation de la pression en avion</a></div>
-  <div class='card'><a href='./masque-sommeil-voyage/index.html'>Masque de Nuit Anti-Lumière pour un Sommeil Réparateur</a></div>
-  <div class='card'><a href='./best-toothbrush-travel/index.html'>Brosse à dents de voyage : le guide rapide</a></div>
-  <div class='card'><a href='./oreiller-voyage/index.html'>Oreiller de voyage confortable : le guide</a></div>
-  <div class='card'><a href='./kit-toilette-voyage/index.html'>Kit de toilette avion / voyage</a></div>
-  <div class='card'><a href='./gourde-filtrante/index.html'>Gourde filtrante pour voyager partout</a></div>
-  <!-- LATEST-END -->
+  <!-- Section des guides -->
+  <div class="container">
+    <section class="section" id="guides">
+      <h2>Derniers guides</h2>
+      <div class="grid" id="latest-grid">
+        <!-- LATEST-START -->
+        <!-- LATEST-END -->
+      </div>
+    </section>
   </div>
-</section>
 
-  </div>
-</section>
+  <!-- Footer -->
+  <footer class="container">
+    <p>© <span id="y"></span> GuideFacile • 
+      <a href="./legal/privacy.md">Vie privée</a> • 
+      Contient des liens d’affiliation. En tant que Partenaire Amazon, je réalise un bénéfice sur les achats remplissant les conditions requises.
+    </p>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
 
-    </div>
-
- </section>
-
-  <section class="section">
-    <h2>Outil bonus</h2>
-    <p>Un pack <strong>Notion + Google Sheets</strong> pour suivre vos achats, comparer les modèles et garder l'historique.</p>
-    <p><a class="btn" href="YOUR_GUMROAD_PRODUCT_URL" target="_blank" rel="noopener">Télécharger le pack (9€)</a></p>
-  </section>
-</main>
-
-<footer class="container">
-  <p>© <span id="y"></span> GuideFacile • <a href="../legal/privacy.md">Vie privée</a> • Contient des liens d'affiliation. Si vous achetez via un lien, nous pouvons recevoir une commission sans coût supplémentaire.</p>
-</footer>
-<script>document.getElementById('y').textContent = new Date().getFullYear()</script>
 </body>
 </html>
