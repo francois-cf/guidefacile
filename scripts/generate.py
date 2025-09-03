@@ -67,22 +67,46 @@ def build_page(p: dict) -> None:
     outdir.mkdir(parents=True, exist_ok=True)
     outf = outdir / "index.html"
 
-    page_html = f"""<!doctype html>
+  page_html = f"""<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>{html.escape(title)} — GuideFacile</title>
-  <meta name="description" content="{html.escape(meta_desc)}">
+  <meta charset="UTF-8">
+  <title>{title} • GuideFacile</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body{{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu;max-width:860px;margin:0 auto;padding:16px}}
-    h1{{margin-top:0}}
-    .muted{{color:#666}}
-    .btn{{display:inline-block;padding:.6rem .9rem;border-radius:.6rem;border:1px solid #ddd;text-decoration:none}}
-    table{{border-collapse:collapse;width:100%}} th,td{{border:1px solid #eee;padding:.5rem;text-align:left}}
-  </style>
+  <meta name="description" content="{meta_desc}">
+  <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
+
+  <!-- Hero Crimson -->
+  <div class="container">
+    <div class="hero">
+      <h1>{title}</h1>
+      <p>{summary}</p>
+    </div>
+  </div>
+
+  <!-- Contenu de l’article -->
+  <div class="container">
+    {html_content}
+    <div class="buy-block">
+      {links}
+    </div>
+    <p class="muted">Dernière mise à jour : {p["last_updated"]}</p>
+  </div>
+
+  <!-- Footer -->
+  <footer class="container">
+    <p>© <span id="y"></span> GuideFacile • 
+      <a href="../legal/privacy.md">Vie privée</a> • 
+      Contient des liens d’affiliation. En tant que Partenaire Amazon, GuideFacile réalise un bénéfice sur les achats remplissant les conditions requises.
+    </p>
+  </footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+
+</body>
+</html>"""
+ 
   <a href="../" style="display:inline-block;margin:.5rem 0">← Retour</a>
   <h1>{html.escape(title)}</h1>
   <p class="muted">{html.escape(summary)}</p>
