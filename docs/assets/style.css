@@ -86,3 +86,17 @@ th{background:#f6f6f6;font-weight:600}
 
 footer{margin-top:28px;text-align:center;color:var(--muted)}
 footer a{color:var(--brand)}
+
+/* === Footer collé en bas === */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+footer {
+  margin-top: auto;  /* pousse le footer en bas */
+}
