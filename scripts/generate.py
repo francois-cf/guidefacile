@@ -112,7 +112,9 @@ def build_page(p: dict) -> None:
   <footer class="container">
     <p>© <span id="y"></span> GuideFacile • 
       <a href="../legal/privacy.md">Vie privée</a> • 
-      Contient des liens d’affiliation. En tant que Partenaire Amazon, GuideFacile réalise un bénéfice sur les achats remplissant les conditions requises.
+                    © 2025 GuideFacile • Vie privée • Contient des liens d’affiliation. 
+En tant que Partenaire Amazon, GuideFacile perçoit une commission sur les achats remplissant les conditions requises.
+
     </p>
   </footer>
   <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
