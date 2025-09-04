@@ -80,9 +80,12 @@ def build_page(p: dict) -> None:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{html.escape(meta_desc)}">
   <link rel="stylesheet" href="../assets/style.css">
-  <link rel="icon" href="../favicon.ico" type="image/x-icon">
-<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+  <link rel="icon" href="/favicon.ico?v=3" sizes="any" type="image/x-icon">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?v=3">
+<meta name="theme-color" content="#A4193D">
+
 
 </head>
 <body>
