@@ -112,8 +112,8 @@ def build_page(p: dict) -> None:
   <footer class="container">
     <p>© <span id="y"></span> GuideFacile • 
       <a href="../legal/privacy.md">Vie privée</a> • 
-                    © 2025 GuideFacile • Vie privée • Contient des liens d’affiliation. 
-En tant que Partenaire Amazon, GuideFacile perçoit une commission sur les achats remplissant les conditions requises.
+    © 2025 Certains liens sont affiliés. Nous pouvons recevoir une commission sans coût supplémentaire pour vous.
+
 
     </p>
   </footer>
