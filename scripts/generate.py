@@ -80,6 +80,8 @@ def build_page(p: dict) -> None:
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{html.escape(meta_desc)}">
   <link rel="stylesheet" href="../assets/style.css">
+  <link rel="icon" href="../favicon.png" type="image/png">
+
 </head>
 <body>
 
