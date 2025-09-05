@@ -40,7 +40,7 @@ def _read_csv() -> list:
     return pages
 
 def _affiliate_buttons(links_str: str) -> str:
-    """Transforme 'Label:url;Label2:url2' en boutons HTML .btn dans un .buy-block."""
+    """Transforme 'Label:url;Label2:url2' en boutons HTML. Amazon -> .btn-amazon, sinon .btn."""
     if not links_str:
         return ""
     buttons = []
@@ -52,12 +52,17 @@ def _affiliate_buttons(links_str: str) -> str:
             label, url = part.split(":", 1)
         else:
             label, url = "Voir le produit", part
+        url_str = (url or "").strip()
+        # Détection robuste d'Amazon (amzn.to, amazon.fr, amazon.com, etc.)
+        is_amazon = ("amzn.to" in url_str.lower()) or ("amazon." in url_str.lower())
+        css_class = "btn-amazon" if is_amazon else "btn"
         buttons.append(
-            f"<a class='btn' href='{html.escape(url.strip())}' target='_blank' rel='nofollow sponsored noopener'>{html.escape(label.strip())}</a>"
+            f"<a class='{css_class}' href='{html.escape(url_str)}' target='_blank' rel='nofollow sponsored noopener'>{html.escape(label.strip())}</a>"
         )
     if not buttons:
         return ""
     return "<div class='buy-block' style='margin:16px 0;display:flex;gap:10px;flex-wrap:wrap;justify-content:center'>" + " ".join(buttons) + "</div>"
+
 
 def build_page(p: dict) -> None:
     """Génère la page HTML d’un article avec le même design que l’accueil."""
