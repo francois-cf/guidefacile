@@ -115,3 +115,21 @@ footer a {
 footer a:hover {
   text-decoration: underline;
 }
+
+/* ===== Bouton Amazon (bleu foncé) ===== */
+.btn-amazon {
+  background: #232F3E;   /* Bleu foncé Amazon */
+  color: #fff;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: .65rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(35, 47, 62, 0.4);
+  transition: filter 0.2s ease;
+}
+.btn-amazon:hover {
+  filter: brightness(1.1);
+}
