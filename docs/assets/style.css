@@ -133,3 +133,26 @@ footer a:hover {
 .btn-amazon:hover {
   filter: brightness(1.1);
 }
+
+/* ——— Date de mise à jour (discrète) ——— */
+.updated { 
+  margin: 16px 0 0; 
+  text-align: center; 
+}
+.updated small{
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .85rem;
+  color: #777;
+  background: rgba(0,0,0,.04);
+  border: 1px solid rgba(0,0,0,.06);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+.updated .dot{
+  width: 6px; height: 6px; 
+  background: #A4193D; 
+  opacity: .35; 
+  border-radius: 50%;
+}
