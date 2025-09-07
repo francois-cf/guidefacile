@@ -156,3 +156,10 @@ footer a:hover {
   opacity: .35; 
   border-radius: 50%;
 }
+
+/* Centrage/narrow du hero (même style, juste largeur contrôlée) */
+.hero--center {
+  max-width: 840px;   /* même look, largeur contenue */
+  margin-left: auto;
+  margin-right: auto;
+}
