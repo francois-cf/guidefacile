@@ -110,7 +110,12 @@ def build_page(p: dict) -> None:
   <div class="container">
     <article>{html_content}</article>
     {buy}
-    <p class="muted">Dernière mise à jour : {html.escape(p["last_updated"])}</p>
+    <div class="updated">
+  <small><span class="dot"></span> Mis à jour le 
+    <time datetime="{html.escape(p['last_updated'])}">{html.escape(p['last_updated'])}</time>
+  </small>
+</div>
+
   </div>
 
   <!-- Footer -->
