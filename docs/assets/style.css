@@ -163,3 +163,17 @@ footer a:hover {
   margin-left: auto;
   margin-right: auto;
 }
+/* Harmonisation du bouton de téléchargement */
+a.btn[href$=".pdf"] {
+  background: #A4193D;   /* crimson red */
+  color: #FFDFB9;        /* peach */
+  font-weight: 700;
+  border-radius: 999px;
+  padding: .65rem 1rem;
+  display: inline-block;
+  text-decoration: none;
+  box-shadow: 0 4px 18px rgba(164, 25, 61, 0.35);
+}
+a.btn[href$=".pdf"]:hover {
+  filter: brightness(1.05);
+}
