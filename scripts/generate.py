@@ -1,12 +1,11 @@
-import csv, os, pathlib, datetime, html, re
+import os, pathlib, datetime, html, re, csv
 
 # Chemins de base
 BASE = pathlib.Path(__file__).resolve().parents[1]
 DOCS = BASE / "docs"
 DATA = BASE / "data" / "articles.csv"
 
-import csv
-
+# -------- CSV robuste (tolère les lignes "cassées") --------
 def _normalize_row(row, lineno=None):
     """Nettoie une ligne CSV et aplatit les listes accidentelles pour éviter les plantages."""
     norm = {}
@@ -40,17 +39,20 @@ def _read_csv():
         for i, row in enumerate(reader, start=2):  # i=2 = première ligne après l'en-tête
             try:
                 p = _normalize_row(row, lineno=i)
+
                 # sécurité : on vérifie qu'il y a bien un slug et un title
                 if not p.get("slug") or not p.get("title"):
                     print(f"ERROR: ligne {i} ignorée (slug/title manquant). Contenu={p}")
                     continue
-                pages.append(render_article(p))
+
+                pages.append(p)   # <-- on stocke le dict tel quel (PAS de render_article)
             except Exception as e:
                 print(f"ERROR: ligne {i} ignorée ({e}). Contenu brut={row}")
                 continue
     return pages
 
 
+# -------- Boutons d’affiliation --------
 def _affiliate_buttons(links_str: str) -> str:
     """Transforme 'Label:url;Label2:url2' en boutons HTML. Amazon -> .btn-amazon, sinon .btn."""
     if not links_str:
@@ -65,7 +67,6 @@ def _affiliate_buttons(links_str: str) -> str:
         else:
             label, url = "Voir le produit", part
         url_str = (url or "").strip()
-        # Détection robuste d'Amazon (amzn.to, amazon.fr, amazon.com, etc.)
         is_amazon = ("amzn.to" in url_str.lower()) or ("amazon." in url_str.lower())
         css_class = "btn-amazon" if is_amazon else "btn"
         buttons.append(
@@ -76,14 +77,14 @@ def _affiliate_buttons(links_str: str) -> str:
     return "<div class='buy-block' style='margin:16px 0;display:flex;gap:10px;flex-wrap:wrap;justify-content:center'>" + " ".join(buttons) + "</div>"
 
 
+# -------- Page article (même design que l’accueil) --------
 def build_page(p: dict) -> None:
-    """Génère la page HTML d’un article avec le même design que l’accueil."""
     slug = p["slug"]
     title = p["title"]
-    summary = p["summary"]
-    meta_desc = p["meta_desc"]
-    html_content = p["html_content"]
-    buy = _affiliate_buttons(p["affiliate_links"])
+    summary = p.get("summary", "")
+    meta_desc = p.get("meta_desc", "")
+    html_content = p.get("html_content", "")
+    buy = _affiliate_buttons(p.get("affiliate_links", ""))
 
     outdir = DOCS / slug
     outdir.mkdir(parents=True, exist_ok=True)
@@ -98,12 +99,10 @@ def build_page(p: dict) -> None:
   <meta name="description" content="{html.escape(meta_desc)}">
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="icon" href="/favicon.ico?v=3" sizes="any" type="image/x-icon">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3">
-<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?v=3">
-<meta name="theme-color" content="#A4193D">
-
-
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?v=3">
+  <meta name="theme-color" content="#A4193D">
 </head>
 <body>
 
@@ -123,20 +122,17 @@ def build_page(p: dict) -> None:
     <article>{html_content}</article>
     {buy}
     <div class="updated">
-  <small><span class="dot"></span> Mis à jour le 
-    <time datetime="{html.escape(p['last_updated'])}">{html.escape(p['last_updated'])}</time>
-  </small>
-</div>
-
+      <small><span class="dot"></span> Mis à jour le 
+        <time datetime="{html.escape(p.get('last_updated',''))}">{html.escape(p.get('last_updated',''))}</time>
+      </small>
+    </div>
   </div>
 
   <!-- Footer -->
   <footer class="container">
     <p>© <span id="y"></span> GuideFacile • 
       <a href="../legal/privacy.md">Vie privée</a> • 
-    Certains liens sont affiliés. Nous pouvons recevoir une commission sans coût supplémentaire pour vous.
-
-
+      Certains liens sont affiliés. Nous pouvons recevoir une commission sans coût supplémentaire pour vous.
     </p>
   </footer>
   <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
@@ -146,6 +142,8 @@ def build_page(p: dict) -> None:
 
     outf.write_text(page_html, encoding="utf-8")
 
+
+# -------- Accueil : injection des cartes --------
 def build_index_cards(pages: list) -> None:
     """Injecte les cartes d’articles entre <!-- LATEST-START --> et <!-- LATEST-END --> dans docs/index.html."""
     indexf = DOCS / "index.html"
@@ -157,7 +155,7 @@ def build_index_cards(pages: list) -> None:
     seen = set()
     cards = []
     for p in pages:
-        slug, title, summary = p["slug"], p["title"], p["summary"]
+        slug, title, summary = p["slug"], p["title"], p.get("summary", "")
         if slug in seen:
             continue
         seen.add(slug)
@@ -173,8 +171,9 @@ def build_index_cards(pages: list) -> None:
     )
     indexf.write_text(new_html, encoding="utf-8")
 
+
+# -------- Sitemap + RSS --------
 def build_sitemap_and_rss(pages: list, site_root: str) -> None:
-    """Génère sitemap.xml et rss.xml dans docs/ avec la bonne racine d’URL."""
     # SITEMAP
     sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     sm.append(f"<url><loc>{site_root}/</loc></url>")
@@ -183,7 +182,7 @@ def build_sitemap_and_rss(pages: list, site_root: str) -> None:
     sm.append("</urlset>")
     (DOCS / "sitemap.xml").write_text("\n".join(sm), encoding="utf-8")
 
-    # RSS simple
+    # RSS (très simple)
     rss = ['<?xml version="1.0" encoding="UTF-8"?>', '<rss version="2.0"><channel>']
     rss.append(f"<title>GuideFacile</title>")
     rss.append(f"<link>{site_root}/</link>")
@@ -191,17 +190,19 @@ def build_sitemap_and_rss(pages: list, site_root: str) -> None:
         rss.append("<item>")
         rss.append(f"<title>{html.escape(p['title'])}</title>")
         rss.append(f"<link>{site_root}/{p['slug']}/</link>")
-        rss.append(f"<description>{html.escape(p['summary'])}</description>")
+        rss.append(f"<description>{html.escape(p.get('summary',''))}</description>")
         rss.append("</item>")
     rss.append("</channel></rss>")
     (DOCS / "rss.xml").write_text("\n".join(rss), encoding="utf-8")
 
+
 def _sort_key(p: dict):
     """Tri par date (du plus récent au plus ancien), tolérant aux formats."""
     try:
-        return datetime.date.fromisoformat(p["last_updated"])
+        return datetime.date.fromisoformat(p.get("last_updated",""))
     except Exception:
         return datetime.date.today()
+
 
 def main():
     print("DEBUG: lancement de generate.py…")
@@ -231,6 +232,7 @@ def main():
 
     # Sitemap + RSS
     build_sitemap_and_rss(pages, site_root=site_root)
+
 
 if __name__ == "__main__":
     if not DATA.exists():
