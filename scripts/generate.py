@@ -5,39 +5,51 @@ BASE = pathlib.Path(__file__).resolve().parents[1]
 DOCS = BASE / "docs"
 DATA = BASE / "data" / "articles.csv"
 
-def _normalize_row(row: dict) -> dict:
-    """Normalise les clés et sécurise les champs manquants."""
-    lower = { (k or "").strip().lower(): (v or "").strip() for k, v in row.items() }
-    slug = (lower.get("slug", "") or "").replace(" ", "-").lower()
-    title = lower.get("title", "")
-    meta_desc = lower.get("meta_desc", "") or lower.get("meta desc", "") or lower.get("metadesc", "")
-    summary = lower.get("summary", "")
-    affiliate_links = lower.get("affiliate_links", "") or lower.get("affiliate links", "")
-    html_content = lower.get("html_content", "") or lower.get("html content", "") or lower.get("content", "")
-    last_updated = lower.get("last_updated", "") or datetime.date.today().isoformat()
+import csv
 
-    return {
-        "slug": slug,
-        "title": title,
-        "meta_desc": meta_desc,
-        "summary": summary,
-        "affiliate_links": affiliate_links,
-        "html_content": html_content,
-        "last_updated": last_updated,
-    }
+def _normalize_row(row, lineno=None):
+    """Nettoie une ligne CSV et aplatit les listes accidentelles pour éviter les plantages."""
+    norm = {}
+    for k, v in row.items():
+        key = (k or "").strip().lower()
 
-def _read_csv() -> list:
-    """Lit le CSV et retourne une liste de pages prêtes à générer."""
-    if not DATA.exists():
-        raise SystemExit("CSV introuvable: " + str(DATA))
+        # Certaines lignes mal collées transforment un champ en liste -> on join proprement
+        if isinstance(v, list):
+            print(f"DEBUG: valeur liste détectée ligne {lineno}, key={key} -> {v}")
+            v = ",".join(str(x) for x in v)
+
+        # Cast en str + suppression des retours à la ligne internes
+        if v is None:
+            val = ""
+        else:
+            val = str(v)
+        val = val.replace("\r", " ").replace("\n", " ").strip()
+        norm[key] = val
+    return norm
+
+
+def _read_csv():
     pages = []
     with open(DATA, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            p = _normalize_row(row)
-            if p["slug"] and p["title"]:
-                pages.append(p)
+        reader = csv.DictReader(
+            f,
+            delimiter=",",
+            quotechar='"',
+            skipinitialspace=True
+        )
+        for i, row in enumerate(reader, start=2):  # i=2 = première ligne après l'en-tête
+            try:
+                p = _normalize_row(row, lineno=i)
+                # sécurité : on vérifie qu'il y a bien un slug et un title
+                if not p.get("slug") or not p.get("title"):
+                    print(f"ERROR: ligne {i} ignorée (slug/title manquant). Contenu={p}")
+                    continue
+                pages.append(render_article(p))
+            except Exception as e:
+                print(f"ERROR: ligne {i} ignorée ({e}). Contenu brut={row}")
+                continue
     return pages
+
 
 def _affiliate_buttons(links_str: str) -> str:
     """Transforme 'Label:url;Label2:url2' en boutons HTML. Amazon -> .btn-amazon, sinon .btn."""
