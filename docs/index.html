@@ -94,6 +94,18 @@
     </p>
   </footer>
   <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
+<script>
+(function () {
+  var g = document.getElementById('latest-grid');
+  function oneCol() {
+    if (window.matchMedia('(max-width: 820px)').matches) {
+      g.style.setProperty('grid-template-columns', '1fr', 'important');
+    }
+  }
+  oneCol();
+  window.addEventListener('resize', oneCol, {passive:true});
+})();
+</script>
 
 </body>
 </html>
