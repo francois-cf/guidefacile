@@ -150,3 +150,20 @@ footer {
     font-size: 1.4rem;
   }
 }
+/* Cartes plus petites et toutes égales */
+#latest-grid .card {
+  padding: 8px 12px;            /* réduit le padding */
+  background: #fff;             /* couleur fond carte (si besoin) */
+  border-radius: 8px;           /* coins arrondis comme avant */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  width: 100%;                  /* force la même largeur */
+  max-width: 500px;             /* réduit la longueur max */
+  margin: 0 auto;               /* centre la carte */
+}
+
+#latest-grid .card a {
+  display: block;
+  font-size: 0.9rem;            /* texte plus petit */
+  line-height: 1.3;
+  text-align: center;           /* centré comme avant */
+}
