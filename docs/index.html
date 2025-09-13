@@ -13,6 +13,24 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?v=3">
 <meta name="theme-color" content="#A4193D">
  
+<!-- Force 1 colonne sur mobile, même si le CSS est en cache -->
+<style>
+@media (max-width: 820px){
+  /* sélecteur très spécifique + !important pour battre toute autre règle */
+  html body #latest-grid.grid{
+    display:grid;
+    grid-template-columns: 1fr !important;
+    gap:12px !important;
+  }
+  html body #latest-grid .card{
+    width:100% !important;
+    max-width:100% !important;
+    display:block !important;
+  }
+  /* empile aussi les 2 boutons du hero */
+  .hero .cta{ display:flex; flex-direction:column; gap:10px }
+}
+</style>
 
 </head>
 <body>
