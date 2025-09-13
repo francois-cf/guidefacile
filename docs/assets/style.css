@@ -167,15 +167,15 @@ footer {
   line-height: 1.3;
   text-align: center;           /* centré comme avant */
 }
-/* Réduit la largeur du bandeau rouge (hero) sur mobile et le centre */
+/* Bandeau rouge (hero) plus étroit */
 .hero {
-  max-width: 90%;        /* 90% de la largeur de l’écran */
-  margin: 0 auto;        /* centré */
-  padding: 20px;         /* réduit le padding interne */
-  border-radius: 15px;   /* arrondi harmonieux */
+  max-width: 75%;          /* réduit encore la largeur */
+  margin: 0 auto;          /* centré */
+  padding: 15px;           /* un peu moins d’espace interne */
+  border-radius: 15px;     /* arrondi */
 }
 
-/* Centrer le titre "Derniers guides" */
+/* Centrer le titre Derniers guides */
 .section h2 {
   text-align: center;
 }
