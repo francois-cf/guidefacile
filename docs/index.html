@@ -5,33 +5,43 @@
   <title>GuideFacile • Accessoires de voyage pratiques et testés</title>
   <meta name="description" content="GuideFacile sélectionne et teste pour vous les meilleurs accessoires de voyage. Comparez, choisissez et partez serein.">
 
- 
-  <link rel="stylesheet" href="./assets/style.css?v=6">
- <link rel="icon" href="/favicon.ico?v=3" sizes="any" type="image/x-icon">
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3">
-<link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?v=3">
-<meta name="theme-color" content="#A4193D">
- 
-<!-- Force 1 colonne sur mobile, même si le CSS est en cache -->
-<style>
-@media (max-width: 820px){
-  /* sélecteur très spécifique + !important pour battre toute autre règle */
-  html body #latest-grid.grid{
-    display:grid;
-    grid-template-columns: 1fr !important;
-    gap:12px !important;
-  }
-  html body #latest-grid .card{
-    width:100% !important;
-    max-width:100% !important;
-    display:block !important;
-  }
-  /* empile aussi les 2 boutons du hero */
-  .hero .cta{ display:flex; flex-direction:column; gap:10px }
-}
-</style>
+  <!-- On ajoute ?v= pour casser le cache -->
+  <link rel="stylesheet" href="./assets/style.css?v=8">
+  <link rel="icon" href="/favicon.ico?v=3" sizes="any" type="image/x-icon">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon-180x180.png?v=3">
+  <meta name="theme-color" content="#A4193D">
 
+  <!-- STYLE INLINE forcé -->
+  <style>
+    /* Grille par défaut : 2 colonnes */
+    #latest-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    #latest-grid .card {
+      display:block;
+      width:100%;
+      text-align:center;
+      background:#fff;
+      padding:12px;
+      border-radius:8px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+    }
+    /* Mobile : 1 colonne */
+    @media (max-width: 820px) {
+      #latest-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .hero .cta {
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+    }
+  </style>
 </head>
 <body>
 
@@ -43,7 +53,6 @@
       <div class="cta">
         <a class="btn" href="#guides">Voir les derniers guides</a>
         <a class="btn" href="./checklist-voyage.html">Télécharger la checklist voyage</a>
-
       </div>
     </div>
   </div>
@@ -54,25 +63,25 @@
       <h2>Derniers guides</h2>
       <div class="grid" id="latest-grid">
         <!-- LATEST-START -->
-  <div class='card'><a href='./laifen-t1-pro-rasoir-voyage/index.html'>Rasoir de voyage Laifen T1 Pro compact &amp; puissant</a></div>
-  <div class='card'><a href='./apple-airtags-voyage/index.html'>Apple AirTag : localisez vos objets en voyage</a></div>
-  <div class='card'><a href='./brita-gourde-filtrante/index.html'>Brita Gourde Filtrante Vital 0,6 L eau pure partout</a></div>
-  <div class='card'><a href='./cadenas-tsa-cable/index.html'>Cadenas TSA avec câble pour bagages</a></div>
-  <div class='card'><a href='./support-telephone-avion/index.html'>Support téléphone avion universel</a></div>
-  <div class='card'><a href='./sacs-sous-vide/index.html'>Sacs de rangement sous vide 6 Pièces 3 * 80x60cm + 3 * 60x40cm</a></div>
-  <div class='card'><a href='./protege-passeport-anti-rfid/index.html'>Protège Passeport Français Étui Anti-RFID</a></div>
-  <div class='card'><a href='./organisateur-valise/index.html'>Organisateur Valise Lot de 8 Compartiments</a></div>
-  <div class='card'><a href='./sac-chaussures-voyage/index.html'>5 Sacs à Chaussures Imperméables pour Voyage</a></div>
-  <div class='card'><a href='./batterie-externe-voyage/index.html'>Batterie externe voyage : 10 000 mAh vs 20 000 mAh</a></div>
-  <div class='card'><a href='./organisateur-accessoire-voyage/index.html'>organisateur de voyage</a></div>
-  <div class='card'><a href='./adaptateur-universel-voyage/index.html'>Adaptateur Universel de Voyage 3 USB + 1 USB-C</a></div>
-  <div class='card'><a href='./pese-bagage-electronique/index.html'>Pèse Bagage Valise Électronique Balance Portable 50Kg</a></div>
-  <div class='card'><a href='./bouchons-oreilles-voyage/index.html'>Bouchons d’Oreilles FlyFit régulation de la pression en avion</a></div>
-  <div class='card'><a href='./masque-sommeil-voyage/index.html'>Masque de Nuit Anti-Lumière pour un Sommeil Réparateur</a></div>
-  <div class='card'><a href='./best-toothbrush-travel/index.html'>Brosse à dents de voyage</a></div>
-  <div class='card'><a href='./oreiller-voyage/index.html'>Oreiller de voyage confortable</a></div>
-  <div class='card'><a href='./kit-toilette-voyage/index.html'>Kit de toilette avion / voyage</a></div>
-  <!-- LATEST-END -->
+        <div class='card'><a href='./laifen-t1-pro-rasoir-voyage/index.html'>Rasoir de voyage Laifen T1 Pro compact &amp; puissant</a></div>
+        <div class='card'><a href='./apple-airtags-voyage/index.html'>Apple AirTag : localisez vos objets en voyage</a></div>
+        <div class='card'><a href='./brita-gourde-filtrante/index.html'>Brita Gourde Filtrante Vital 0,6 L eau pure partout</a></div>
+        <div class='card'><a href='./cadenas-tsa-cable/index.html'>Cadenas TSA avec câble pour bagages</a></div>
+        <div class='card'><a href='./support-telephone-avion/index.html'>Support téléphone avion universel</a></div>
+        <div class='card'><a href='./sacs-sous-vide/index.html'>Sacs de rangement sous vide 6 Pièces 3 * 80x60cm + 3 * 60x40cm</a></div>
+        <div class='card'><a href='./protege-passeport-anti-rfid/index.html'>Protège Passeport Français Étui Anti-RFID</a></div>
+        <div class='card'><a href='./organisateur-valise/index.html'>Organisateur Valise Lot de 8 Compartiments</a></div>
+        <div class='card'><a href='./sac-chaussures-voyage/index.html'>5 Sacs à Chaussures Imperméables pour Voyage</a></div>
+        <div class='card'><a href='./batterie-externe-voyage/index.html'>Batterie externe voyage : 10 000 mAh vs 20 000 mAh</a></div>
+        <div class='card'><a href='./organisateur-accessoire-voyage/index.html'>Organisateur de voyage</a></div>
+        <div class='card'><a href='./adaptateur-universel-voyage/index.html'>Adaptateur Universel de Voyage 3 USB + 1 USB-C</a></div>
+        <div class='card'><a href='./pese-bagage-electronique/index.html'>Pèse Bagage Valise Électronique Balance Portable 50Kg</a></div>
+        <div class='card'><a href='./bouchons-oreilles-voyage/index.html'>Bouchons d’Oreilles FlyFit régulation de la pression en avion</a></div>
+        <div class='card'><a href='./masque-sommeil-voyage/index.html'>Masque de Nuit Anti-Lumière pour un Sommeil Réparateur</a></div>
+        <div class='card'><a href='./best-toothbrush-travel/index.html'>Brosse à dents de voyage</a></div>
+        <div class='card'><a href='./oreiller-voyage/index.html'>Oreiller de voyage confortable</a></div>
+        <div class='card'><a href='./kit-toilette-voyage/index.html'>Kit de toilette avion / voyage</a></div>
+        <!-- LATEST-END -->
       </div>
     </section>
   </div>
@@ -82,7 +91,6 @@
     <p>© <span id="y"></span> GuideFacile • 
       <a href="./legal/privacy.md">Vie privée</a> • 
       Certains liens sont affiliés. Nous pouvons recevoir une commission sans coût supplémentaire pour vous.
-
     </p>
   </footer>
   <script>document.getElementById('y').textContent = new Date().getFullYear()</script>
