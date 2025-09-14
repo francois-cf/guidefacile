@@ -79,12 +79,26 @@ def _affiliate_buttons(links_str: str) -> str:
 
 # -------- Page article (même design que l’accueil) --------
 def build_page(p: dict) -> None:
+    """Génère la page HTML d’un article dans l’ordre: hero -> bouton (haut) -> description -> photo -> bouton (bas)."""
     slug = p["slug"]
     title = p["title"]
-    summary = p.get("summary", "")
-    meta_desc = p.get("meta_desc", "")
-    html_content = p.get("html_content", "")
-    buy = _affiliate_buttons(p.get("affiliate_links", ""))
+    summary = p["summary"]
+    meta_desc = p["meta_desc"]
+
+    # Boutons affiliés (haut/bas identiques)
+    buy_html = _affiliate_buttons(p.get("affiliate_links") or p.get("liens_affiliés") or "")
+
+    # Image (pas de lien cliquable)
+    image_url = (p.get("image_url") or p.get("image") or "").strip()
+    image_html = ""
+    if image_url:
+        image_html = f"""
+        <figure class="product-figure">
+          <img class="product-img" src="{html.escape(image_url)}" alt="{html.escape(title)}" loading="lazy" />
+        </figure>
+        """
+
+    html_content = p["html_content"]
 
     outdir = DOCS / slug
     outdir.mkdir(parents=True, exist_ok=True)
@@ -106,7 +120,7 @@ def build_page(p: dict) -> None:
 </head>
 <body>
 
-  <!-- Hero Crimson -->
+  <!-- Hero -->
   <div class="container">
     <div class="hero">
       <h1>{html.escape(title)}</h1>
@@ -117,13 +131,35 @@ def build_page(p: dict) -> None:
     </div>
   </div>
 
-  <!-- Contenu de l’article -->
+  <!-- Bouton Amazon (haut, centré) -->
+  <div class="container">
+    <div class="buy-block buy-top">
+      {buy_html}
+    </div>
+  </div>
+
+  <!-- Description / contenu -->
   <div class="container">
     <article>{html_content}</article>
-    {buy}
+  </div>
+
+  <!-- Photo (non cliquable) -->
+  <div class="container">
+    {image_html}
+  </div>
+
+  <!-- Bouton Amazon (bas, identique) -->
+  <div class="container">
+    <div class="buy-block buy-bottom">
+      {buy_html}
+    </div>
+  </div>
+
+  <!-- Métadonnée de mise à jour -->
+  <div class="container">
     <div class="updated">
       <small><span class="dot"></span> Mis à jour le 
-        <time datetime="{html.escape(p.get('last_updated',''))}">{html.escape(p.get('last_updated',''))}</time>
+        <time datetime="{html.escape(p['last_updated'])}">{html.escape(p['last_updated'])}</time>
       </small>
     </div>
   </div>
@@ -141,6 +177,7 @@ def build_page(p: dict) -> None:
 </html>"""
 
     outf.write_text(page_html, encoding="utf-8")
+
 
 
 # -------- Accueil : injection des cartes --------
