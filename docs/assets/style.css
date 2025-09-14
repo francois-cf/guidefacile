@@ -180,3 +180,42 @@ footer {
   text-align: center;
 }
 
+/* Ajustement global mobile */
+@media (max-width: 768px) {
+  /* Hero rouge plus étroit */
+  .hero {
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 16px;
+  }
+
+  /* Titre "Derniers guides" centré */
+  #guides h2 {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Grille : 1 colonne centrée */
+  .grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Cartes : plus grandes et police plus lisible */
+  .grid .card {
+    width: 90%;              /* largeur de chaque carte */
+    max-width: 500px;         /* limite pour éviter trop large */
+    padding: 16px 20px;       /* plus d’espace intérieur */
+    font-size: 1.1rem;        /* taille de police augmentée */
+    margin: 8px 0;            /* espace entre les cartes */
+    box-sizing: border-box;
+  }
+
+  /* Boutons dans le hero : plus grands */
+  .cta .btn {
+    font-size: 1rem;
+    padding: 10px 16px;
+  }
+}
