@@ -1,267 +1,211 @@
-/* --- Variables couleurs --- */
-:root {
-  --peach: #f8d5b4;
+/* ===============================
+   GuideFacile — thème clair propre
+   Couleurs : Crimson #A4193D / Peach #FFDFB9
+   =============================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root{
+  --peach: #FFDFB9;
   --crimson: #A4193D;
+  --crimson-dark: #8F1434;
+  --text: #2b2b2b;
+  --muted: #6b6b6b;
+  --card: #ffffff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.12);
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+/* Reset léger */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+img{max-width:100%;height:auto;display:block}
+
+/* Base */
+body{
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Arial, sans-serif;
+  color: var(--text);
   background: var(--peach);
-  color: #222;
-  line-height: 1.5;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-.container {
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 16px;
+/* Conteneur global
+   -> sur mobile : marges latérales très faibles pour que le bandeau “colle” presque aux bords */
+.container{
+  max-width: 1040px;
+  padding-inline: clamp(6px, 2.2vw, 20px);
+  margin-inline: auto;
+  padding-block: 10px;
 }
 
-/* --- Hero --- */
-.hero {
-  background: var(--crimson);
+/* ===============================
+   HERO (bandeau rouge)
+   =============================== */
+.hero{
+  background: linear-gradient(180deg, var(--crimson), var(--crimson-dark));
   color: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(16px, 5vw, 28px);
   text-align: center;
-  padding: 24px 16px;
-  border-radius: 20px;
-  margin-bottom: 24px;
+
+  /* Le hero occupe presque toute la largeur :
+     on limite les marges via le conteneur + on autorise le hero à s’étirer */
+  width: 100%;
 }
 
-.hero h1 {
-  font-size: 1.8rem;
+.hero h1{
   margin: 0 0 8px 0;
+  font-size: clamp(20px, 5.4vw, 34px);
+  line-height: 1.25;
 }
 
-.hero p {
-  margin: 0 0 16px 0;
+.hero p{
+  margin: 0 0 14px 0;
+  opacity: .95;
+  font-size: clamp(14px, 3.6vw, 17px);
 }
 
-.cta {
+.cta{
   display: flex;
+  gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
-.btn {
-  background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 30px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: 0.2s ease-in-out;
-  font-size: 0.9rem;
-}
-
-.btn:hover {
-  background: #fff;
-  color: var(--crimson);
-}
-
-.btn-amazon {
-  background: var(--crimson);
-  color: #fff;
-  padding: 8px 14px;
-  border-radius: 30px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-.btn-amazon:hover {
-  background: #7f1230;
-}
-
-/* --- Titres --- */
-h2 {
-  font-size: 1.4rem;
-  margin-top: 0;
-}
-
-/* --- Grid des cartes --- */
-#latest-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.card {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  text-align: center;
-  padding: 10px;
-}
-
-.card a {
-  display: block;
-  color: var(--crimson);
-  font-weight: 600;
-  text-decoration: none;
-  font-size: 0.9rem;
-  line-height: 1.3;
-}
-
-.card a:hover {
-  text-decoration: underline;
-}
-
-/* --- Mise à jour --- */
-.updated {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.85rem;
-  color: #555;
-}
-
-.updated .dot {
+/* Boutons */
+.btn{
   display: inline-block;
-  width: 8px;
-  height: 8px;
-  background: var(--crimson);
-  border-radius: 50%;
-  margin-right: 4px;
+  text-decoration: none;
+  color: #fff;
+  border: 2px solid rgba(255,255,255,.9);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: clamp(14px, 3.8vw, 16px);
+  transition: transform .12s ease, background .12s ease;
 }
+.btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
 
-/* --- Footer --- */
-footer {
+/* ===============================
+   Section / Titre
+   =============================== */
+.section{ margin-top: 8px; }
+.section h2{
   text-align: center;
-  font-size: 0.85rem;
-  color: #444;
-  margin-top: 40px;
+  margin: 10px 0 10px;
+  font-size: clamp(18px, 5vw, 26px);
+  color: var(--crimson);
 }
 
-/* --- Responsive mobile : 1 seule colonne --- */
-@media (max-width: 768px) {
-  #latest-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  .card {
-    padding: 8px;
-  }
-
-  .hero h1 {
-    font-size: 1.4rem;
-  }
-}
-/* Cartes plus petites et toutes égales */
-#latest-grid .card {
-  padding: 8px 12px;            /* réduit le padding */
-  background: #fff;             /* couleur fond carte (si besoin) */
-  border-radius: 8px;           /* coins arrondis comme avant */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  width: 100%;                  /* force la même largeur */
-  max-width: 500px;             /* réduit la longueur max */
-  margin: 0 auto;               /* centre la carte */
+/* ===============================
+   Grille des cartes
+   =============================== */
+.grid{
+  display: grid;
+  gap: 10px;
+  /* Desktop/tablette : grille fluide */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
 
-#latest-grid .card a {
+/* Mobile : UNE SEULE COLONNE + largeur visuelle confortable */
+@media (max-width: 760px){
+  .grid{
+    grid-template-columns: 1fr;   /* 1 colonne */
+    max-width: 720px;
+    margin-inline: auto;
+  }
+}
+
+/* Carte */
+.card{
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1px solid rgba(0,0,0,.06);
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  transition: transform .12s ease, box-shadow .15s ease;
+}
+
+.card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.12);
+}
+
+/* Lien de carte (pleine largeur, texte lisible) */
+.card a{
   display: block;
-  font-size: 0.9rem;            /* texte plus petit */
-  line-height: 1.3;
-  text-align: center;           /* centré comme avant */
-}
-/* --- HERO (bandeau rouge) adapté mobile --- */
-.hero {
-  max-width: 600px;       /* largeur max du bloc rouge */
-  margin: 0 auto;         /* centré */
-  padding: 15px;          /* moins d’espace interne */
-  border-radius: 15px;    /* arrondi joli */
-}
-
-/* Centrer le titre “Derniers guides” */
-.section h2 {
+  text-decoration: none;
+  color: var(--crimson);
   text-align: center;
+  font-weight: 700;
+  font-size: clamp(15px, 4.3vw, 18px);
+  padding: 12px 14px;
 }
 
-/* Ajustement global mobile */
-@media (max-width: 768px) {
-  /* Hero rouge plus étroit */
-  .hero {
-    max-width: 90%;
-    margin: 0 auto;
-    padding: 16px;
-  }
-
-  /* Titre "Derniers guides" centré */
-  #guides h2 {
-    text-align: center;
-    font-size: 1.4rem;
-    margin-bottom: 1rem;
-  }
-
-  /* Grille : 1 colonne centrée */
-  .grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* Cartes : plus grandes et police plus lisible */
-  .grid .card {
-    width: 90%;              /* largeur de chaque carte */
-    max-width: 500px;         /* limite pour éviter trop large */
-    padding: 16px 20px;       /* plus d’espace intérieur */
-    font-size: 1.1rem;        /* taille de police augmentée */
-    margin: 8px 0;            /* espace entre les cartes */
-    box-sizing: border-box;
-  }
-
-  /* Boutons dans le hero : plus grands */
-  .cta .btn {
-    font-size: 1rem;
-    padding: 10px 16px;
-  }
+/* ===============================
+   Bloc d’achat (boutons Amazon)
+   =============================== */
+.buy-block{
+  margin: 16px 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
-/* ===== Mobile : bannière rouge plus large + texte plus lisible ===== */
-@media (max-width: 768px) {
-  /* Étendre la première .container (celle du bloc rouge) presque jusqu’aux bords */
-  .container:first-of-type{
-    max-width: 100%;
-    padding-left: 8px;   /* petit bord pêche */
-    padding-right: 8px;
-  }
 
-  /* Bloc rouge (hero) : marges réduites et texte plus lisible */
-  .hero{
-    margin: 10px 0 14px;
-    padding: 16px;
-    border-radius: 14px;
-  }
-  .hero h1{
-    font-size: clamp(22px, 6.2vw, 28px);
-    line-height: 1.2;
-  }
-  .hero p{
-    font-size: clamp(14px, 4.2vw, 16px);
-    margin-top: 6px;
-  }
-  .cta{ gap: 8px; }
-  .cta .btn{
-    padding: 10px 14px;
-    font-size: 14px;
-  }
+.btn-amazon{
+  display: inline-block;
+  text-decoration: none;
+  background: #232F3E;     /* Bleu foncé Amazon */
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 700;
+}
 
-  /* Titre "Derniers guides" centré et un peu plus gros */
-  #guides h2{
-    text-align: center;
-    font-size: clamp(18px, 5vw, 22px);
-    margin: 8px 0 10px;
-  }
+/* ===============================
+   Tableau simple (si utilisé dans les pages)
+   =============================== */
+table{border-collapse:collapse;width:100%;background:#fff;border-radius:12px;overflow:hidden}
+th,td{border:1px solid rgba(0,0,0,.06);padding:.7rem;text-align:left}
+th{background:#f8f8f8;font-weight:600}
 
-  /* Une seule colonne de cartes sur mobile */
-  .grid{ grid-template-columns: 1fr; gap: 10px; }
+/* ===============================
+   “Mis à jour le …”
+   =============================== */
+.updated{
+  margin-top: 14px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+.updated .dot{
+  display:inline-block;
+  width:8px;height:8px;border-radius:50%;
+  background: var(--crimson);
+  margin-right:6px;
+}
 
-  /* Cartes plus petites et taille de texte adaptée */
-  .card a{
-    display: block;
-    padding: 10px 12px;
-    font-size: clamp(14px, 4.4vw, 17px);
-  }
+/* ===============================
+   Footer
+   =============================== */
+footer{
+  margin-top: 24px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+footer a{ color: var(--crimson); text-decoration: none; }
+footer a:hover{ text-decoration: underline; }
+
+/* ===============================
+   Ajustements tablettes/desktop
+   =============================== */
+@media (min-width: 761px){
+  .container{ padding-inline: 20px; }
+  .hero{ border-radius: 18px; }
+  .card a{ padding: 14px 16px; }
 }
