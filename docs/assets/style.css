@@ -209,3 +209,19 @@ footer a:hover{ text-decoration: underline; }
   .hero{ border-radius: 18px; }
   .card a{ padding: 14px 16px; }
 }
+/* Image produit (non cliquable) */
+.product-figure { margin: 8px auto 14px; text-align: center; }
+.product-img {
+  max-width: 720px;   /* garde une largeur lisible sur desktop */
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.20);
+}
+
+/* Un peu d'air autour des blocs d'achat */
+.buy-block.buy-top { margin: 8px 0 10px; }
+.buy-block.buy-bottom { margin: 12px 0 8px; }
+
+/* Sécurité responsive */
+.container img { max-width: 100%; height: auto; }
