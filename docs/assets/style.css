@@ -219,3 +219,49 @@ footer {
     padding: 10px 16px;
   }
 }
+/* ===== Mobile : bannière rouge plus large + texte plus lisible ===== */
+@media (max-width: 768px) {
+  /* Étendre la première .container (celle du bloc rouge) presque jusqu’aux bords */
+  .container:first-of-type{
+    max-width: 100%;
+    padding-left: 8px;   /* petit bord pêche */
+    padding-right: 8px;
+  }
+
+  /* Bloc rouge (hero) : marges réduites et texte plus lisible */
+  .hero{
+    margin: 10px 0 14px;
+    padding: 16px;
+    border-radius: 14px;
+  }
+  .hero h1{
+    font-size: clamp(22px, 6.2vw, 28px);
+    line-height: 1.2;
+  }
+  .hero p{
+    font-size: clamp(14px, 4.2vw, 16px);
+    margin-top: 6px;
+  }
+  .cta{ gap: 8px; }
+  .cta .btn{
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  /* Titre "Derniers guides" centré et un peu plus gros */
+  #guides h2{
+    text-align: center;
+    font-size: clamp(18px, 5vw, 22px);
+    margin: 8px 0 10px;
+  }
+
+  /* Une seule colonne de cartes sur mobile */
+  .grid{ grid-template-columns: 1fr; gap: 10px; }
+
+  /* Cartes plus petites et taille de texte adaptée */
+  .card a{
+    display: block;
+    padding: 10px 12px;
+    font-size: clamp(14px, 4.4vw, 17px);
+  }
+}
